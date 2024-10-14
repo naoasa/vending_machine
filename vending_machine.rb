@@ -56,11 +56,14 @@ class Item
 end
 
 # 実行
-cola = Item.new('cola')
+hot_cup_coffee = PapercupCoffee.new('hot');
+cider = Drink.new('cider')
 vending_machine = VendingMachine.new('サントリー')
 
 vending_machine.deposit_coin(100)
-puts vending_machine.press_button(cola) #=> 空文字
-
 vending_machine.deposit_coin(100)
-puts vending_machine.press_button(cola) #=> cola
+puts vending_machine.press_button(cider) #=> cider
+
+puts vending_machine.press_button(hot_cup_coffee) #=> 空文字
+vending_machine.add_cup(1)
+puts vending_machine.press_button(hot_cup_coffee) #=> hot cup coffee
