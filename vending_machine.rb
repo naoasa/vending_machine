@@ -1,5 +1,8 @@
 # 自動販売機の責務
 class VendingMachine
+  # 外部からカップ在庫数を読み書き可能にする
+  attr_accessor :cups
+
   # オブジェクト生成時に自動販売機のメーカー名を記録
   def initialize(name)
     @manufacturer_name = name
@@ -20,13 +23,30 @@ class VendingMachine
 
   # 預り金がアイテム金額以上である場合にボタンを押すと、アイテムを出力する
   def press_button(item)
-    if @deposit >= item.price
-      # 預り金を減らす
-      @deposit -= item.price
-      # アイテムを返す
-      item.name
+    # アイテムがカップコーヒーの場合と、そうでない場合
+    if item.class == PapercupCoffee
+      # カップ在庫数が1以上あり、かつ、預り金が商品価格以上である場合
+      if @cups >= 1 && @deposit >= item.price
+        # 預り金を減らす
+        @deposit -= item.price
+        # カップ数を減らす
+        @cups -= 1
+        # アイテムを返す
+        item.name
+      elsif @deposit < item.price
+        "[残高不足] 預り金:#{@deposit}円, 商品:#{item.price}円"
+      elsif @cups < 1
+        "[カップ不足] カップの在庫がありません"
+      end
     else
-      "[残高不足] 預り金:#{@deposit}円, 商品:#{item.price}円"
+      if @deposit >= item.price
+        # 預り金を減らす
+        @deposit -= item.price
+        # アイテムを返す
+        item.name
+      else
+        "[残高不足] 預り金:#{@deposit}円, 商品:#{item.price}円"
+      end
     end
   end
 
@@ -103,6 +123,13 @@ vending_machine.deposit_coin(100)
 vending_machine.deposit_coin(100)
 puts vending_machine.press_button(cider) #=> cider
 
-puts vending_machine.press_button(hot_cup_coffee) #=> 空文字
+puts vending_machine.press_button(hot_cup_coffee) #=> カップ不足
 vending_machine.add_cup(1)
 puts vending_machine.press_button(hot_cup_coffee) #=> hot cup coffee
+
+ice_cup_coffee = PapercupCoffee.new('ice')
+puts vending_machine.press_button(ice_cup_coffee) #=> お金不足
+vending_machine.deposit_coin(100) #=> 100円を投入
+puts vending_machine.press_button(ice_cup_coffee) #=> お金は足りているがカップ不足
+vending_machine.add_cup(1)
+puts vending_machine.press_button(ice_cup_coffee) #=> ice cup coffee
