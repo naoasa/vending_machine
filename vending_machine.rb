@@ -5,6 +5,8 @@ class VendingMachine
     @manufacturer_name = name
     # 自動販売機内の預かり金
     @deposit = 0
+    # カップの在庫数
+    @cups = 0
   end
 
   # 投入されたお金が100円コインの場合のみ受け入れ、自動販売機に金額を貯める
@@ -25,6 +27,19 @@ class VendingMachine
       item.name
     else
       "[残高不足] 預り金:#{@deposit}円, 商品:#{item.price}円"
+    end
+  end
+
+  # カップを追加する
+  def add_cup(num)
+    num = num.to_i
+    # カップの在庫数が100より少ない場合、カップの在庫数を加算
+    if @cups < 100
+      @cups += num
+    end
+    # カップの在庫数が100を超えた場合、100に調整する
+    if @cups > 100
+      @cups = 100
     end
   end
 
@@ -89,5 +104,5 @@ vending_machine.deposit_coin(100)
 puts vending_machine.press_button(cider) #=> cider
 
 puts vending_machine.press_button(hot_cup_coffee) #=> 空文字
-# vending_machine.add_cup(1)
+vending_machine.add_cup(1)
 puts vending_machine.press_button(hot_cup_coffee) #=> hot cup coffee
