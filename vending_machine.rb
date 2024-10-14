@@ -114,22 +114,30 @@ class PapercupCoffee < Item
   end
 end
 
+# スナック菓子の責務
+class Snack < Item
+  # 初期化メソッド
+  def initialize # 引数は受け取らない
+    @name = 'potato chips'
+    @price = 150
+  end
+end
+
 # 実行
 hot_cup_coffee = PapercupCoffee.new('hot');
 cider = Drink.new('cider')
+snack = Snack.new
 vending_machine = VendingMachine.new('サントリー')
 
-vending_machine.deposit_coin(100)
-vending_machine.deposit_coin(100)
+vending_machine.deposit_coin(100) #=> (100円を投入)
+vending_machine.deposit_coin(100) #=> (100円を投入)
 puts vending_machine.press_button(cider) #=> cider
 
-puts vending_machine.press_button(hot_cup_coffee) #=> カップ不足
-vending_machine.add_cup(1)
+puts vending_machine.press_button(hot_cup_coffee) #=> (カップ不足)
+vending_machine.add_cup(1) #=> (カップを追加)
 puts vending_machine.press_button(hot_cup_coffee) #=> hot cup coffee
 
-ice_cup_coffee = PapercupCoffee.new('ice')
-puts vending_machine.press_button(ice_cup_coffee) #=> お金不足
-vending_machine.deposit_coin(100) #=> 100円を投入
-puts vending_machine.press_button(ice_cup_coffee) #=> お金は足りているがカップ不足
-vending_machine.add_cup(1)
-puts vending_machine.press_button(ice_cup_coffee) #=> ice cup coffee
+puts vending_machine.press_button(snack) #=> (残高不足)
+vending_machine.deposit_coin(100) #=> (100円を投入)
+vending_machine.deposit_coin(100) #=> (100円を投入)
+puts vending_machine.press_button(snack) #=> potato chips
