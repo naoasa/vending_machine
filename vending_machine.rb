@@ -37,10 +37,18 @@ end
 
 # アイテムの責務
 class Item
-  # アイテム名を外部から参照可能にする
+  # 外部からアイテム名と価格を参照できるようにする
   attr_reader :name, :price
-
   # オブジェクト生成時にアイテム名を受け取り、格納する
+  def initialize(name)
+    @name = name # Ex. 'cola', 'hot'
+    @price = 0 # 初期化
+  end
+end
+
+# 飲み物の責務
+class Drink < Item
+  # アイテム名と価格を紐づけする
   def initialize(name)
     @name = name # Ex. 'cola'
     # アイテム名と価格を紐づけする
@@ -55,6 +63,22 @@ class Item
   end
 end
 
+# カップコーヒーの責務
+class PapercupCoffee < Item
+  # 初期化メソッド
+  def initialize(name)
+    # カップコーヒーの価格
+    @price = 100
+    # 引数とアイテム名を紐づけする
+    case name
+    when 'ice' then
+      @name = 'ice cup coffee'
+    when 'hot' then
+      @name = 'hot cup coffee'
+    end
+  end
+end
+
 # 実行
 hot_cup_coffee = PapercupCoffee.new('hot');
 cider = Drink.new('cider')
@@ -65,5 +89,5 @@ vending_machine.deposit_coin(100)
 puts vending_machine.press_button(cider) #=> cider
 
 puts vending_machine.press_button(hot_cup_coffee) #=> 空文字
-vending_machine.add_cup(1)
+# vending_machine.add_cup(1)
 puts vending_machine.press_button(hot_cup_coffee) #=> hot cup coffee
